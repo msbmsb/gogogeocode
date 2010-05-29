@@ -1,0 +1,12 @@
+GoGoGeocode is intended to be a very simple java package for geocoding an address to coordinates. The goal is to do minimal work to get the minimal information.
+
+It makes use of the Google Geocoding API (V3). More information on this API can be found at: http://code.google.com/apis/maps/documentation/geocoding/. 
+- There is no API key necessary for this version of the web service. 
+- The API is subject to a query limit of 2,500 geolocation requests per day. Any additional queries over this limit will yield a status code of "OVER_QUERY_LIMIT"
+
+This class will return coordinates of -1,-1 for any unsuccessful geocoding attempt. Coordinates are returned in string form as "longitude,latitude".
+
+The license is found in the LICENSE file - MIT License.
+
+Mitchell Bowden <mitchellbowden AT gmail DOT com>
+http://github.com/msbmsb/gogogeocode
