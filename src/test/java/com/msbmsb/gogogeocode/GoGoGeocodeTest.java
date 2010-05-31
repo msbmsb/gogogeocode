@@ -44,8 +44,7 @@ public class GoGoGeocodeTest
      */
     public void testGoGoGeocode()
     {
-        GoGoGeocode gg = new GoGoGeocode();
-        String results = gg.geocodeToString("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA");
+        String results = GoGoGeocode.geocodeToString("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA");
         assertEquals(results, "-122.0845109,37.4220323");
     }
 }

@@ -27,9 +27,17 @@ package com.msbmsb.gogogeocode;
 
 import com.msbmsb.gogogeocode.Coordinates;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * {@code GoogleGeocodeResponse} parses the XML response from the Google 
@@ -55,16 +63,39 @@ public class GoogleGeocodeResponse {
 
   /**
    * Constructor given a dom xml response from the API
-   * @param xmlResponse dom document of API xml response
+   * @param xmlStream InputStream of API xml response
    */
-  public GoogleGeocodeResponse(Document xmlResponse) {
-    // initialize members
-    coordinates = new Coordinates();
-    status = GoogleGeocodeStatus.NONE;
+  public GoogleGeocodeResponse(InputStream xmlStream) {
+    initialize();
 
-    this.xmlResponse = xmlResponse;
+    buildDomDocument(xmlStream);
 
     parseXmlResponse();
+  }
+
+  /**
+   * Initialize members
+   */
+  private void initialize() {
+    // initialize members
+    this.coordinates = new Coordinates();
+    this.status = GoogleGeocodeStatus.NONE;
+  }
+
+  private void buildDomDocument(InputStream xmlStream) {
+    // Build a dom Document out of the xml response
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+    try {
+      DocumentBuilder db = dbf.newDocumentBuilder();
+      xmlResponse = db.parse(xmlStream);
+    } catch(ParserConfigurationException pce) {
+      pce.printStackTrace();
+    } catch(SAXException se) {
+      se.printStackTrace();
+    } catch(IOException ioe) {
+      ioe.printStackTrace();
+    }
   }
 
   /**

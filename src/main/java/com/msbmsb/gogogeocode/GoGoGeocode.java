@@ -27,15 +27,6 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -64,7 +55,7 @@ public class GoGoGeocode {
    * @param address the string representation of a physical address
    * @return full URL of API call, as String. null if address is empty
    */
-  public String buildURL(String address) throws UnsupportedEncodingException {
+  private static String buildURL(String address) throws UnsupportedEncodingException {
     if(address == null || address.equals("")) {
       return null;
     }
@@ -81,7 +72,7 @@ public class GoGoGeocode {
    * @param address the string representation of a physical address
    * @return String of coordinates in the form of "longitude,latitude"
    */
-  public String geocodeToString(String address) {
+  public static String geocodeToString(String address) {
     return geocode(address).toString();
   }
 
@@ -91,39 +82,34 @@ public class GoGoGeocode {
    * @param address the string representation of a physical address
    * @return Coordinates object containing coordinate information from response
    */
-  public Coordinates geocode(String address) {
+  public static Coordinates geocode(String address) {
     Coordinates coords = new Coordinates();
 
+    String requestUrl = "";
     try {
-      String requestUrl = buildURL(address);
-      GetMethod getMethod = new GetMethod(requestUrl);
-      getMethod.setFollowRedirects(true);
+      requestUrl = buildURL(address);
+    } catch(UnsupportedEncodingException uee) {
+      uee.printStackTrace();
+    }
 
-      try {
-        httpClient.executeMethod(getMethod);
+    GetMethod getMethod = new GetMethod(requestUrl);
+    getMethod.setFollowRedirects(true);
 
-        // Build a dom Document out of the xml response
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document xmlResponse = db.parse(getMethod.getResponseBodyAsStream());
+    try {
+      httpClient.executeMethod(getMethod);
 
-        // build the response object
-        GoogleGeocodeResponse response = new GoogleGeocodeResponse(xmlResponse);
+      // build the response object
+      GoogleGeocodeResponse response = new GoogleGeocodeResponse(getMethod.getResponseBodyAsStream());
 
-        // only change coordinates from default if request successful
-        if(response.successful()) {
-          coords = response.getCoords();
-        } 
-      } catch(ParserConfigurationException pce) {
-        pce.printStackTrace();
-      } catch(SAXException se) {
-        se.printStackTrace();
-      } finally {
-        getMethod.abort();
-        getMethod.releaseConnection();
-      }
+      // only change coordinates from default if request successful
+      if(response.successful()) {
+        coords = response.getCoords();
+      } 
     } catch(Exception e) {
       System.out.println("Geocode exception: " + e.toString());
+    } finally {
+      getMethod.abort();
+      getMethod.releaseConnection();
     }
     
     return coords;
