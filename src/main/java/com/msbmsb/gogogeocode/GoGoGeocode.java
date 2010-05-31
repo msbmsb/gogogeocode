@@ -26,6 +26,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
+import org.apache.commons.io.IOUtils;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -99,7 +100,11 @@ public class GoGoGeocode {
       httpClient.executeMethod(getMethod);
 
       // build the response object
-      GoogleGeocodeResponse response = new GoogleGeocodeResponse(getMethod.getResponseBodyAsStream());
+      GoogleGeocodeResponse response = new GoogleGeocodeResponse(IOUtils.toString(getMethod.getResponseBodyAsStream(), getMethod.getRequestCharSet()));
+      /**
+       * Parsing can be done via Dom Document as well: 
+       * GoogleGeocodeResponse response = new GoogleGeocodeResponse(getMethod.getResponseBodyAsStream());
+       */
 
       // only change coordinates from default if request successful
       if(response.successful()) {

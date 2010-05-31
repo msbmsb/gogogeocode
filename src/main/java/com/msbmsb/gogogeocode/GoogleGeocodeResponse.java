@@ -74,6 +74,16 @@ public class GoogleGeocodeResponse {
   }
 
   /**
+   * Constructor given a String representation of the xml response from the API
+   * @param xmlString String of API xml response
+   */
+  public GoogleGeocodeResponse(String xmlString) {
+    initialize();
+
+    extractFromXmlResponse(xmlString);
+  }
+
+  /**
    * Initialize members
    */
   private void initialize() {
@@ -82,6 +92,41 @@ public class GoogleGeocodeResponse {
     this.status = GoogleGeocodeStatus.NONE;
   }
 
+  /**
+   * Extracts desired data from input String representation of xml
+   * @param xmlString String of API xml response
+   */
+  private void extractFromXmlResponse(String xmlString) {
+    // extract status
+    this.status = extractXmlValue(xmlString, "<status>");
+    if(!successful()) return;
+
+    coordinates.latitude = Double.parseDouble(extractXmlValue(xmlString, "<lat>"));
+    coordinates.longitude = Double.parseDouble(extractXmlValue(xmlString, "<lng>"));
+  }
+
+  /**
+   * Given a string representation of xml and a key, return the value of 
+   * the first occurrence of that key
+   * @param xmlString the xml string to search in
+   * @param key the xml key to search for
+   * @return the value of the first occurrence of key, null if not found
+   */
+  private String extractXmlValue(String xmlString, String key) {
+    int keyIndex = xmlString.indexOf(key);
+    if(keyIndex == -1) {
+      return null;
+    }
+    keyIndex += key.length();
+    int endKey = xmlString.indexOf("<", keyIndex);
+    return xmlString.substring(keyIndex, endKey);
+  }
+
+  /**
+   * Build a Dom Document from the given xml InputStream
+   * @param xmlStream the InputStream of the xml
+   * Sets the xmlResponse member.
+   */
   private void buildDomDocument(InputStream xmlStream) {
     // Build a dom Document out of the xml response
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
