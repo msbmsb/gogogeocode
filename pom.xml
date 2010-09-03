@@ -4,7 +4,7 @@
   <groupId>com.msbmsb.gogogeocode</groupId>
   <artifactId>gogogeocode</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
   <name>gogogeocode</name>
   <description>Minimal Java for Google Geocoding API V3</description>
   <url>http://github.com/msbmsb/gogogeocode</url>
@@ -27,6 +27,16 @@
       <version>1.3.1</version>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>repo</id>
+      <url>http://github.com/msbmsb/msbmsb-mvn-repo/raw/master/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshot-repo</id>
+      <url>http://github.com/msbmsb/msbmsb-mvn-repo/raw/master/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
   <build>
     <plugins>
       <plugin>
