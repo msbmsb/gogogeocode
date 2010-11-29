@@ -8,6 +8,8 @@
 
 package com.msbmsb.gogogeocode;
 
+import java.lang.Math;
+
 import com.msbmsb.gogogeocode.GoGoGeocode;
 import com.msbmsb.gogogeocode.Coordinates;
 
@@ -44,8 +46,9 @@ public class GoGoGeocodeTest
      */
     public void testGoGoGeocode()
     {
-        String results = GoGoGeocode.geocodeToString("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA");
+        Coordinates results = GoGoGeocode.geocode("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA");
         System.out.println(results);
-        assertEquals(results, "-122.0829964,37.421708");
+        assertEquals(Math.floor(results.longitude), -123.0);
+        assertEquals(Math.floor(results.latitude), 37.0);
     }
 }
